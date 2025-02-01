@@ -8,6 +8,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { User } from 'src/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GoogleStrategy } from './strategy/google.strategy';
 
 @Module({
   imports: [
@@ -26,6 +27,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
   controllers: [AuthController],
-  providers: [PassportModule, AuthService, AuthStrategy, AuthGuard],
+  providers: [
+    PassportModule,
+    AuthService,
+    AuthStrategy,
+    GoogleStrategy,
+    AuthGuard,
+  ],
 })
 export class AuthModule {}

@@ -66,4 +66,23 @@ export class AuthService {
       }),
     };
   }
+
+  async googleLogin(userData: any): Promise<Tokens> {
+    const { email, displayName } = userData;
+
+    let user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      user = this.userRepository.create({
+        full_name: displayName,
+        email,
+      });
+      await this.userRepository.save(user);
+    }
+
+    const payload = { userId: user.id, email: user.email };
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    };
+  }
 }
