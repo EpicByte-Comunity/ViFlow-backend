@@ -67,7 +67,7 @@ export class AuthService {
     };
   }
 
-  async googleLogin(registerEmail: RegisterAuthDto): Promise<Tokens> {
+  async googleAuth(registerEmail: RegisterAuthDto): Promise<Tokens> {
     const { email } = registerEmail;
 
     let user = await this.userRepository.findOne({ where: { email } });
