@@ -30,16 +30,9 @@ export class AuthController {
     return this.authService.login(loginAuthDto);
   }
 
-  @Get('google')
-  @UseGuards(GoogleAuthGuard)
-  async googleLogin() {
-    return { message: 'Redirecting to Google...' };
-  }
-
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleRedirect(@Req() req) {
-    console.log(req.user);
+  async googleRedirect(@Req() req): Promise<Tokens> {
     return this.authService.googleLogin(req.user);
   }
 }

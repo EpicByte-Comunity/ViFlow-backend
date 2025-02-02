@@ -67,22 +67,22 @@ export class AuthService {
     };
   }
 
-  async googleLogin(userData: any): Promise<Tokens> {
-    const { email, displayName } = userData;
+  async googleLogin(registerEmail: RegisterAuthDto): Promise<Tokens> {
+    const { email } = registerEmail;
 
     let user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
       user = this.userRepository.create({
-        full_name: displayName,
         email,
       });
       await this.userRepository.save(user);
     }
 
-    const payload = { userId: user.id, email: user.email };
     return {
-      accessToken: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync({
+        userId: user.email,
+      }),
     };
   }
 }
