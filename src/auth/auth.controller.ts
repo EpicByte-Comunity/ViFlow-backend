@@ -62,7 +62,6 @@ export class AuthController {
     @Request() req,
     @Body() verifyCodeDto: VerifyCodeDto,
   ): Promise<boolean> {
-
     const verify = await this.authService.verifyCode(
       req.user.userId,
       verifyCodeDto.code,
@@ -72,6 +71,12 @@ export class AuthController {
   }
 
   @Post('set-password')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
-  async setPassword(@Request() req, @Body() settPasswordDto: SetPasswordDto) {}
+  async setPassword(
+    @Request() req,
+    @Body() settPasswordDto: SetPasswordDto,
+  ): Promise<boolean> {
+    return this.authService.setPassword(req.user.userId, settPasswordDto);
+  }
 }

@@ -12,7 +12,7 @@ import { Repository } from 'typeorm';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { Tokens } from './interface/type-token';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { VerifyCodeDto } from './dto/verify-code.dto';
+import { SetPasswordDto } from './dto/set-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -102,6 +102,26 @@ export class AuthService {
     await this.userRepository.update(user.id, {
       verificationCode: null,
       verificationCodeExpiry: null,
+    });
+
+    return true;
+  }
+
+  async setPassword(
+    email: string,
+    setPasswordDto: SetPasswordDto,
+  ): Promise<boolean> {
+    const { password, confirmPassword } = setPasswordDto;
+
+    if (password !== confirmPassword)
+      throw new BadRequestException('Passwords do not match');
+
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) throw new BadRequestException('User not found');
+
+    await this.userRepository.update(user.id, {
+      password: await argon2.hash(password),
     });
 
     return true;
