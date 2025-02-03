@@ -18,8 +18,8 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS, 
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
   }
@@ -31,6 +31,13 @@ export class EmailService {
       throw new NotFoundException(`User with email ${email} not found`);
 
     const code = crypto.randomBytes(3).toString('hex').toUpperCase();
+
+    const expirationTime = new Date();
+    expirationTime.setMinutes(expirationTime.getMinutes() + 10);
+
+    user.verificationCode = code;
+    user.verificationCodeExpiry = expirationTime;
+    await this.userRepository.save(user);
 
     const emailData: SendEmailDto = {
       to: email,

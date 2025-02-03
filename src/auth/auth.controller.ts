@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Post,
   Req,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -15,6 +16,9 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { EmailService } from 'src/email/email.service';
+import { AuthGuard } from './guard/auth.guard';
+import { SetPasswordDto } from './dto/set-password.dto';
+import { VerifyCodeDto } from './dto/verify-code.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -36,6 +40,7 @@ export class AuthController {
   }
 
   @Get('google/callback')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(GoogleAuthGuard)
   async googleRedirect(@Req() req): Promise<Tokens> {
     const user = req.user;
@@ -49,4 +54,24 @@ export class AuthController {
 
     return tokens;
   }
+
+  @Post('verify-code')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  async verifyCode(
+    @Request() req,
+    @Body() verifyCodeDto: VerifyCodeDto,
+  ): Promise<boolean> {
+
+    const verify = await this.authService.verifyCode(
+      req.user.userId,
+      verifyCodeDto.code,
+    );
+
+    return verify;
+  }
+
+  @Post('set-password')
+  @UseGuards(AuthGuard)
+  async setPassword(@Request() req, @Body() settPasswordDto: SetPasswordDto) {}
 }

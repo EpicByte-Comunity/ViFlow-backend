@@ -28,6 +28,12 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   profile_pic: string;
 
+  @Column({ nullable: true })
+  verificationCode: string;
+
+  @Column({ nullable: true })
+  verificationCodeExpiry: Date;
+
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 

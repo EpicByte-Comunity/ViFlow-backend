@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { Tokens } from './interface/type-token';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { VerifyCodeDto } from './dto/verify-code.dto';
 
 @Injectable()
 export class AuthService {
@@ -84,5 +85,25 @@ export class AuthService {
         userId: user.email,
       }),
     };
+  }
+
+  async verifyCode(email: string, code: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user)
+      throw new NotFoundException(`User with email ${email} not found`);
+
+    if (user.verificationCode !== code)
+      throw new BadRequestException('Invalid verification code');
+
+    if (user.verificationCodeExpiry.getTime() < Date.now())
+      throw new BadRequestException('Verification code expired');
+
+    await this.userRepository.update(user.id, {
+      verificationCode: null,
+      verificationCodeExpiry: null,
+    });
+
+    return true;
   }
 }
