@@ -15,6 +15,8 @@ import { PostHashtagsModule } from './post-hashtags/post-hashtags.module';
 import { FollowModule } from './follow/follow.module';
 import { SavePostModule } from './save-post/save-post.module';
 import { EmailModule } from './email/email.module';
+import { TweetModule } from './tweet/tweet.module';
+import { PollModule } from './poll/poll.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { EmailModule } from './email/email.module';
     FollowModule,
     SavePostModule,
     EmailModule,
+    TweetModule,
+    PollModule,
   ],
 })
 export class AppModule {}

@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { AuthGuard } from './guard/auth.guard';
+import { JwtAuthGuard } from './guard/auth.guard';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { User } from 'src/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -34,7 +34,8 @@ import { EmailModule } from 'src/email/email.module';
     AuthService,
     AuthStrategy,
     GoogleStrategy,
-    AuthGuard,
+    JwtAuthGuard,
   ],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

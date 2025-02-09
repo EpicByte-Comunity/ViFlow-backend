@@ -1,6 +1,11 @@
 import { Story } from 'src/stories/entities/story.entity';
 import { User } from 'src/user/entities/user.entity';
-import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('story_views')
 export class StoryView {
@@ -13,6 +18,6 @@ export class StoryView {
   @ManyToOne(() => User, (user) => user.stories)
   user: User;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp', name: 'viewed_at' })
   viewed_at: Date;
 }

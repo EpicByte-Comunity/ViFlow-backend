@@ -16,7 +16,7 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { EmailService } from 'src/email/email.service';
-import { AuthGuard } from './guard/auth.guard';
+import { JwtAuthGuard } from './guard/auth.guard';
 import { SetPasswordDto } from './dto/set-password.dto';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 
@@ -42,8 +42,8 @@ export class AuthController {
   @Get('google/callback')
   @HttpCode(HttpStatus.OK)
   @UseGuards(GoogleAuthGuard)
-  async googleRedirect(@Req() req): Promise<Tokens> {
-    const user = req.user;
+  async googleRedirect(@Req() req: Request): Promise<Tokens> {
+    const user = req['user'].email;
 
     if (!user?.email)
       throw new NotFoundException('Correo electrónico no encontrado');
@@ -57,13 +57,13 @@ export class AuthController {
 
   @Post('verify-code')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   async verifyCode(
     @Request() req,
     @Body() verifyCodeDto: VerifyCodeDto,
   ): Promise<boolean> {
     const verify = await this.authService.verifyCode(
-      req.user.userId,
+      req['user'].email,
       verifyCodeDto.code,
     );
 
@@ -72,11 +72,11 @@ export class AuthController {
 
   @Post('set-password')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   async setPassword(
     @Request() req,
     @Body() settPasswordDto: SetPasswordDto,
   ): Promise<boolean> {
-    return this.authService.setPassword(req.user.userId, settPasswordDto);
+    return this.authService.setPassword(req['user'].email, settPasswordDto);
   }
 }

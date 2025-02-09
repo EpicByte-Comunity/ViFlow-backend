@@ -5,8 +5,10 @@ import { Post } from 'src/posts/entities/post.entity';
 import { Notification } from 'src/notifications/entities/notification.entity';
 import { Story } from 'src/stories/entities/story.entity';
 import { SavePost } from 'src/save-post/entities/save-post.entity';
-
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
+import { Tweet } from 'src/tweet/entities/tweet.entity';
+import { Poll } from 'src/poll/entities/poll.entity';
+import { PollVote } from 'src/poll/entities/poll-vote.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -38,9 +40,11 @@ export class User extends BaseEntity {
   posts: Post[];
 
   @OneToMany(() => Follow, (follower) => follower.follower)
+  @JoinColumn({ name: 'follower_id' })
   followers: Follow[];
 
   @OneToMany(() => Follow, (follower) => follower.followed)
+  @JoinColumn({ name: 'followed_id' })
   following: Follow[];
 
   @OneToMany(() => Story, (story) => story.user)
@@ -54,4 +58,13 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Collection, (collection) => collection.user)
   collections: Collection[];
+
+  @OneToMany(() => Tweet, (tweet) => tweet.user)
+  tweets: Tweet[];
+
+  @OneToMany(() => Poll, (poll) => poll.user)
+  polls: Poll[];
+
+  @OneToMany(() => PollVote, (vote) => vote.user)
+  pollVotes: PollVote[];
 }
