@@ -1,8 +1,8 @@
 import { BaseEntity } from 'src/common/helper/base.entity';
-import { ReactionType } from 'src/posts/dto/react-to-post.dto';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { ReactionType } from '../enum/reaction-type.enum';
 
 @Entity('likes')
 export class Like extends BaseEntity {

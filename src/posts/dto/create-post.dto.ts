@@ -1,12 +1,21 @@
-import {  IsOptional, IsString,  } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsArray,
+  IsUrl,
+} from 'class-validator';
 
 export class CreatePostDto {
+  @IsNotEmpty()
+  @IsUrl()
+  image_url: string;
 
-  @IsString()
   @IsOptional()
-  imageUrl?: string;
-
   @IsString()
-  @IsOptional()
   caption?: string;
+
+  @IsOptional()
+  @IsArray()
+  hashtags?: string[];
 }
