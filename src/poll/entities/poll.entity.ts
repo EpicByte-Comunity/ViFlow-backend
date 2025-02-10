@@ -11,8 +11,8 @@ import { PollOption } from './poll-option.entity';
 
 @Entity('polls')
 export class Poll {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User, (user) => user.polls, { onDelete: 'CASCADE' })
   user: User;

@@ -9,8 +9,8 @@ import {
 
 @Entity('story_views')
 export class StoryView {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Story, (story) => story.views)
   story: Story;

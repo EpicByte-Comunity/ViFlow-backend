@@ -8,8 +8,8 @@ import {
 
 @Entity('follows')
 export class Follow {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User, (user) => user.followers)
   follower: User;

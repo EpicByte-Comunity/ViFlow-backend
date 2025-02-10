@@ -10,8 +10,8 @@ import { User } from 'src/user/entities/user.entity';
 
 @Entity('poll_votes')
 export class PollVote {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Poll, (poll) => poll.options, { onDelete: 'CASCADE' })
   poll: Poll;

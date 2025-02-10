@@ -9,6 +9,9 @@ import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { Tweet } from 'src/tweet/entities/tweet.entity';
 import { Poll } from 'src/poll/entities/poll.entity';
 import { PollVote } from 'src/poll/entities/poll-vote.entity';
+import { Retweet } from 'src/tweet/entities/retweet.entity';
+import { TweetLike } from 'src/tweet/entities/tweet.like.entity';
+import { TweetComment } from 'src/tweet/entities/tweet-comment.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -61,6 +64,15 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Tweet, (tweet) => tweet.user)
   tweets: Tweet[];
+
+  @OneToMany(() => Retweet, (retweet) => retweet.user)
+  retweets: Retweet[];
+
+  @OneToMany(() => TweetLike, (like) => like.user)
+  tweetLikes: TweetLike[];
+
+  @OneToMany(() => TweetComment, (comment) => comment.user)
+  tweetComments: TweetComment[];
 
   @OneToMany(() => Poll, (poll) => poll.user)
   polls: Poll[];

@@ -16,6 +16,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Request } from 'express';
 import { ResponseList } from 'src/common/helper/paginador/type/paginator.type';
 import { Paginator } from 'src/common/helper/paginador/paginator.helper';
+import { AuthenticatedRequest } from 'src/auth/interface/request.interface';
 
 @Injectable()
 export class PostsService {
@@ -31,13 +32,13 @@ export class PostsService {
   ) {}
 
   async create(
-    req: Request,
+    req: AuthenticatedRequest,
     createPostDto: CreatePostDto,
   ): Promise<Response<Post>> {
     const { hashtags, ...postData } = createPostDto;
 
     const user = await this.userRepository.findOne({
-      where: { email: (req.user as User).email },
+      where: { email: req.user.email },
     });
 
     if (!user) throw new NotFoundException('User not found');
@@ -100,6 +101,7 @@ export class PostsService {
   }
 
   async findAll(page: number, limit: number): Promise<ResponseList<Post>> {
+
     if (!page || !limit)
       throw new BadRequestException('Page and limit are required');
 
@@ -114,7 +116,7 @@ export class PostsService {
 
   async findOne(id: string): Promise<Response<Post>> {
     const post = await this.postRepository.findOne({
-      where: { id: Number(id) },
+      where: { id: id },
       relations: ['user', 'hashtags', 'comments', 'likes'],
     });
 
@@ -128,12 +130,12 @@ export class PostsService {
   }
 
   async update(
-    req: Request,
+    req: AuthenticatedRequest,
     id: string,
     updatePostDto: UpdatePostDto,
   ): Promise<Response<Post>> {
     const post = await this.postRepository.findOne({
-      where: { id: Number(id) },
+      where: { id: id },
       relations: ['user'],
     });
 
@@ -142,7 +144,7 @@ export class PostsService {
     if (!post.user || !post.user.id)
       throw new NotFoundException('User not found in post');
 
-    if ((req.user as User).id !== post.user.id)
+    if (req.user.id !== post.user.id)
       throw new ForbiddenException(
         'You are not authorized to update this post',
       );
@@ -183,13 +185,13 @@ export class PostsService {
     };
   }
 
-  async remove(req: Request, id: string): Promise<Response<null>> {
+  async remove(req: AuthenticatedRequest, id: string): Promise<Response<null>> {
     const post = await this.findOne(id);
 
-    if (!post.data.user || !(post.data.user as User).id)
+    if (!post.data.user || !post.data.user.id)
       throw new NotFoundException('User not found in post');
 
-    if ((req.user as User).id !== (post.data.user as User).id)
+    if (req.user.id !== post.data.user.id)
       throw new ForbiddenException(
         'You are not authorized to delete this post',
       );

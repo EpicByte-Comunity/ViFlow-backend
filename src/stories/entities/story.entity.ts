@@ -10,8 +10,8 @@ import {
 
 @Entity('stories')
 export class Story {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   image_url: string;

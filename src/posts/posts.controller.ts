@@ -12,11 +12,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { PostsService } from './posts.service';
 import { JwtAuthGuard } from 'src/auth/guard/auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { AuthenticatedRequest } from 'src/auth/interface/request.interface';
 
 @Controller('posts')
 export class PostsController {
@@ -25,7 +25,10 @@ export class PostsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
-  create(@Req() req: Request, @Body() createPostDto: CreatePostDto) {
+  create(
+    @Req() req: AuthenticatedRequest,
+    @Body() createPostDto: CreatePostDto,
+  ) {
     return this.postsService.create(req, createPostDto);
   }
 
@@ -44,7 +47,7 @@ export class PostsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   update(
-    @Req() req: Request,
+    @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
   ) {
@@ -54,7 +57,7 @@ export class PostsController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  remove(@Req() req: Request, @Param('id') id: string) {
+  remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.postsService.remove(req, id);
   }
 }

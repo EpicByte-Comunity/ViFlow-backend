@@ -11,7 +11,6 @@ import { StoryViewsModule } from './story-views/story-views.module';
 import { CollectionsModule } from './collections/collections.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { HashtagsModule } from './hashtags/hashtags.module';
-import { PostHashtagsModule } from './post-hashtags/post-hashtags.module';
 import { FollowModule } from './follow/follow.module';
 import { SavePostModule } from './save-post/save-post.module';
 import { EmailModule } from './email/email.module';
@@ -34,7 +33,6 @@ import { PollModule } from './poll/poll.module';
     CollectionsModule,
     NotificationsModule,
     HashtagsModule,
-    PostHashtagsModule,
     FollowModule,
     SavePostModule,
     EmailModule,

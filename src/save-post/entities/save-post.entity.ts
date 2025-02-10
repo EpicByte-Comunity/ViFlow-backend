@@ -1,11 +1,16 @@
-import { Post } from "src/posts/entities/post.entity";
-import { User } from "src/user/entities/user.entity";
-import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Post } from 'src/posts/entities/post.entity';
+import { User } from 'src/user/entities/user.entity';
+import {
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('saved_posts')
 export class SavePost {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User, (user) => user.savedPosts)
   user: User;
